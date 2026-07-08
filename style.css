@@ -72,6 +72,25 @@ a { color: inherit; text-decoration: none; }
   display: grid; gap: 20px;
   grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
 }
+
+/* ---------- 검색 · 주제 탭 ---------- */
+.filters { margin-bottom: 28px; display: flex; flex-direction: column; gap: 14px; }
+.search {
+  width: 100%; padding: 14px 20px; border: 1px solid var(--line);
+  border-radius: 999px; font-size: 1rem; background: #fff; color: var(--ink);
+  box-shadow: var(--shadow); font-family: inherit;
+}
+.search::placeholder { color: #9aa3ba; }
+.search:focus { outline: none; border-color: var(--brand-2); box-shadow: 0 0 0 3px rgba(47,107,255,.15); }
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+.tab {
+  padding: 8px 16px; border: 1px solid var(--line); background: #fff;
+  border-radius: 999px; font-size: .9rem; font-weight: 600; color: var(--ink-soft);
+  cursor: pointer; transition: .15s; font-family: inherit;
+}
+.tab:hover { border-color: var(--brand); color: var(--ink); }
+.tab.active { background: var(--brand); border-color: var(--brand); color: #fff; }
+.no-result { display: none; text-align: center; color: var(--ink-soft); padding: 48px 0; font-size: 1rem; }
 .card {
   background: var(--surface); border-radius: var(--radius); overflow: hidden;
   box-shadow: var(--shadow); border: 1px solid var(--line);
