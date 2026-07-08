@@ -133,8 +133,9 @@ a { color: inherit; text-decoration: none; }
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 .photo-grid img {
-  width: 100%; height: 100%; aspect-ratio: 4 / 3; object-fit: cover;
+  width: 100%; height: auto;
   border-radius: 12px; box-shadow: var(--shadow); cursor: zoom-in;
+  align-self: start;
 }
 .article figure.photo-set figcaption {
   font-size: .84rem; color: var(--ink-soft); margin-top: 10px; text-align: center;
