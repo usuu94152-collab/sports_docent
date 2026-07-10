@@ -18,23 +18,43 @@ function doPost(e) {
 
     var 학번 = String(body['학번'] || '').trim();
     var 이름 = String(body['이름'] || '').trim();
-    var 주제 = String(body['주제'] || '').trim();
-    var 의견 = String(body['의견'] || '').trim();
     var 수업소감 = String(body['수업소감'] || '').trim();
+    var 항목 = body['항목'];
 
-    if (!학번 || !이름 || !주제 || !의견 || !수업소감) {
+    if (!학번 || !이름 || !수업소감) {
       return jsonOut({ result: 'error', message: '필수 항목이 비어 있습니다.' });
     }
-
-    // 지나치게 긴 입력 차단 (스팸 방지)
-    if (의견.length > 5000 || 수업소감.length > 5000) {
+    if (!Array.isArray(항목) || 항목.length === 0) {
+      return jsonOut({ result: 'error', message: '주제별 의견이 없습니다.' });
+    }
+    if (항목.length > 21) {
+      return jsonOut({ result: 'error', message: '주제가 너무 많습니다.' });
+    }
+    if (수업소감.length > 5000) {
       return jsonOut({ result: 'error', message: '입력이 너무 깁니다.' });
     }
 
-    var sheet = getSheet();
-    sheet.appendRow([new Date(), 학번, 이름, 주제, 의견, 수업소감]);
+    // 주제 1개당 1행. 학번/이름/수업소감은 각 행에 함께 기록합니다.
+    var now = new Date();
+    var rows = [];
 
-    return jsonOut({ result: 'success' });
+    for (var i = 0; i < 항목.length; i++) {
+      var 주제 = String(항목[i]['주제'] || '').trim();
+      var 의견 = String(항목[i]['의견'] || '').trim();
+
+      if (!주제 || !의견) {
+        return jsonOut({ result: 'error', message: '비어 있는 주제 또는 의견이 있습니다.' });
+      }
+      if (의견.length > 5000) {
+        return jsonOut({ result: 'error', message: '입력이 너무 깁니다.' });
+      }
+      rows.push([now, 학번, 이름, 주제, 의견, 수업소감]);
+    }
+
+    var sheet = getSheet();
+    sheet.getRange(sheet.getLastRow() + 1, 1, rows.length, HEADERS.length).setValues(rows);
+
+    return jsonOut({ result: 'success', saved: rows.length });
   } catch (err) {
     return jsonOut({ result: 'error', message: err.message });
   }

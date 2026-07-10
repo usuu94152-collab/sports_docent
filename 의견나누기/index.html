@@ -19,7 +19,7 @@
 <article class="article">
   <span class="kicker">✍ 생각 나누기</span>
   <h1>내 생각 남기기</h1>
-  <p class="lead">스포츠 도슨트의 자료를 읽고 어떤 생각이 들었나요? 인상 깊었던 점, 새롭게 알게 된 사실, 또는 '생각해보기' 질문에 대한 나의 답을 자유롭게 적어주세요.</p>
+  <p class="lead">스포츠 도슨트의 자료를 읽고 어떤 생각이 들었나요? 인상 깊었던 점, 새롭게 알게 된 사실, 또는 '생각해보기' 질문에 대한 나의 답을 자유롭게 적어주세요. 여러 주제에 대해 쓰고 싶다면 <strong>주제를 추가</strong>할 수 있습니다.</p>
 
   <div class="prose">
     <div class="form-card">
@@ -37,38 +37,9 @@
           </div>
         </div>
 
-        <div class="field">
-          <label for="topic">어떤 주제에 대한 생각인가요?<span class="req">*</span></label>
-          <select id="topic" name="topic" required>
-            <option value="">— 주제를 선택하세요 —</option>
-            <option>01 감독들은 왜 다른 옷을 입을까?</option>
-            <option>02 기후변화와 스포츠의 위기</option>
-            <option>03 오사카의 상징과 마라토너</option>
-            <option>04 장비가 기록을 바꾼다 (기술도핑)</option>
-            <option>05 축구와 인종차별</option>
-            <option>06 운동과 음악의 과학</option>
-            <option>07 프로야구 이전의 야구</option>
-            <option>08 스포츠 음료의 시작 (게토레이)</option>
-            <option>09 스포츠 기술의 혁신 (포스베리 플롭)</option>
-            <option>10 e스포츠와 페이커 이상혁</option>
-            <option>11 줄어드는 남녀 기록 격차</option>
-            <option>12 체육 선생님이 되는 길</option>
-            <option>13 스포츠에 깃든 전통의 혼 (하카)</option>
-            <option>14 일본의 학교 스포츠클럽 (부카츠)</option>
-            <option>15 유니폼, 하나되고 싶은 마음</option>
-            <option>16 야구의 징크스 — 파울라인</option>
-            <option>17 룰루레몬 창업자의 비하인드</option>
-            <option>18 메이저리그 맞춤형 배트 제작</option>
-            <option>19 스타디움과 파크의 차이</option>
-            <option>20 팬심을 가장한 폭력</option>
-            <option>21 도핑을 허용하는 대회 (인핸스드 게임)</option>
-          </select>
-        </div>
+        <div id="topicList"></div>
 
-        <div class="field">
-          <label for="opinion">나의 생각<span class="req">*</span></label>
-          <textarea id="opinion" name="opinion" placeholder="자료를 읽고 든 생각을 자유롭게 적어주세요." required></textarea>
-        </div>
+        <button type="button" class="btn-add" id="addBtn">＋ 다른 주제에 대한 의견 추가</button>
 
         <div class="field">
           <label for="reflection">2026학년도 체육수업 소감<span class="req">*</span></label>
@@ -84,6 +55,49 @@
   </div>
 </article>
 
+<!-- 주제 + 의견 한 묶음 템플릿 -->
+<template id="blockTpl">
+  <div class="topic-block">
+    <div class="block-head">
+      <span class="block-num"></span>
+      <button type="button" class="btn-remove">삭제</button>
+    </div>
+
+    <div class="field">
+      <label>어떤 주제에 대한 생각인가요?<span class="req">*</span></label>
+      <select class="topic-select" required>
+        <option value="">— 주제를 선택하세요 —</option>
+        <option>01 감독들은 왜 다른 옷을 입을까?</option>
+        <option>02 기후변화와 스포츠의 위기</option>
+        <option>03 오사카의 상징과 마라토너</option>
+        <option>04 장비가 기록을 바꾼다 (기술도핑)</option>
+        <option>05 축구와 인종차별</option>
+        <option>06 운동과 음악의 과학</option>
+        <option>07 프로야구 이전의 야구</option>
+        <option>08 스포츠 음료의 시작 (게토레이)</option>
+        <option>09 스포츠 기술의 혁신 (포스베리 플롭)</option>
+        <option>10 e스포츠와 페이커 이상혁</option>
+        <option>11 줄어드는 남녀 기록 격차</option>
+        <option>12 체육 선생님이 되는 길</option>
+        <option>13 스포츠에 깃든 전통의 혼 (하카)</option>
+        <option>14 일본의 학교 스포츠클럽 (부카츠)</option>
+        <option>15 유니폼, 하나되고 싶은 마음</option>
+        <option>16 야구의 징크스 — 파울라인</option>
+        <option>17 룰루레몬 창업자의 비하인드</option>
+        <option>18 메이저리그 맞춤형 배트 제작</option>
+        <option>19 스타디움과 파크의 차이</option>
+        <option>20 팬심을 가장한 폭력</option>
+        <option>21 도핑을 허용하는 대회 (인핸스드 게임)</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>나의 생각<span class="req">*</span></label>
+      <textarea class="opinion-text" placeholder="자료를 읽고 든 생각을 자유롭게 적어주세요." required></textarea>
+    </div>
+  </div>
+</template>
+
 <footer class="site-footer">스포츠 도슨트 아카이브 · <a href="../index.html">전체 목록 보기</a></footer>
 
 <script>
@@ -91,14 +105,19 @@
   /* ====================================================================
      ▼▼▼ 선생님 설정 ▼▼▼
      구글 Apps Script 웹앱을 배포한 뒤, 발급받은 URL을 아래 따옴표 안에 붙여넣으세요.
-     (배포 방법은 저장소의 의견나누기/README-설정방법.md 참고)
+     (배포 방법은 같은 폴더의 README-설정방법.md 참고)
      예: "https://script.google.com/macros/s/AKfycb..../exec"
   ==================================================================== */
   var SHEET_ENDPOINT = "";
   /* ==================================================================== */
 
+  var MAX_BLOCKS = 21;
+
   var form = document.getElementById('opinionForm');
   var btn = document.getElementById('submitBtn');
+  var addBtn = document.getElementById('addBtn');
+  var list = document.getElementById('topicList');
+  var tpl = document.getElementById('blockTpl');
   var statusEl = document.getElementById('status');
 
   function show(type, msg) {
@@ -106,19 +125,70 @@
     statusEl.textContent = msg;
   }
 
+  function blocks() {
+    return Array.prototype.slice.call(list.querySelectorAll('.topic-block'));
+  }
+
+  function refresh() {
+    var bs = blocks();
+    bs.forEach(function (b, i) {
+      b.querySelector('.block-num').textContent = '주제 ' + (i + 1);
+      // 블록이 하나뿐이면 삭제 버튼 숨김
+      b.querySelector('.btn-remove').style.display = bs.length > 1 ? '' : 'none';
+    });
+    addBtn.disabled = bs.length >= MAX_BLOCKS;
+    addBtn.textContent = addBtn.disabled
+      ? '주제를 모두 추가했습니다'
+      : '＋ 다른 주제에 대한 의견 추가';
+  }
+
+  function addBlock() {
+    var node = tpl.content.cloneNode(true);
+    var block = node.querySelector('.topic-block');
+    block.querySelector('.btn-remove').addEventListener('click', function () {
+      block.remove();
+      refresh();
+    });
+    list.appendChild(node);
+    refresh();
+    return block;
+  }
+
+  addBtn.addEventListener('click', function () {
+    var b = addBlock();
+    b.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+
+  // 최초 1개 블록
+  addBlock();
+
   form.addEventListener('submit', function (e) {
     e.preventDefault();
 
-    var payload = {
-      학번: document.getElementById('sid').value.trim(),
-      이름: document.getElementById('name').value.trim(),
-      주제: document.getElementById('topic').value,
-      의견: document.getElementById('opinion').value.trim(),
-      수업소감: document.getElementById('reflection').value.trim()
-    };
+    var 학번 = document.getElementById('sid').value.trim();
+    var 이름 = document.getElementById('name').value.trim();
+    var 수업소감 = document.getElementById('reflection').value.trim();
 
-    if (!payload.학번 || !payload.이름 || !payload.주제 || !payload.의견 || !payload.수업소감) {
+    var 항목 = [];
+    var seen = {};
+    var invalid = false;
+    var duplicated = null;
+
+    blocks().forEach(function (b) {
+      var 주제 = b.querySelector('.topic-select').value;
+      var 의견 = b.querySelector('.opinion-text').value.trim();
+      if (!주제 || !의견) { invalid = true; return; }
+      if (seen[주제]) { duplicated = 주제; return; }
+      seen[주제] = true;
+      항목.push({ 주제: 주제, 의견: 의견 });
+    });
+
+    if (!학번 || !이름 || !수업소감 || invalid || 항목.length === 0) {
       show('err', '모든 항목을 빠짐없이 입력해 주세요.');
+      return;
+    }
+    if (duplicated) {
+      show('err', '같은 주제를 두 번 선택했습니다: ' + duplicated);
       return;
     }
 
@@ -134,13 +204,15 @@
     fetch(SHEET_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(payload)
+      body: JSON.stringify({ 학번: 학번, 이름: 이름, 수업소감: 수업소감, 항목: 항목 })
     })
       .then(function (res) { return res.json(); })
       .then(function (data) {
         if (data && data.result === 'success') {
-          show('ok', '제출되었습니다. 소중한 의견 고마워요! 🎉');
+          show('ok', '주제 ' + 항목.length + '개의 의견이 제출되었습니다. 고마워요! 🎉');
           form.reset();
+          list.innerHTML = '';
+          addBlock();
         } else {
           throw new Error((data && data.message) || '저장에 실패했습니다.');
         }
