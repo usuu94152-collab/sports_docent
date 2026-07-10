@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>학생 의견 나누기 · 스포츠 도슨트</title>
+<meta name="description" content="스포츠 도슨트 자료를 읽고 든 생각을 자유롭게 남겨주세요.">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand">스포츠 <span>도슨트</span></div>
+    <a class="back" href="../index.html">← 목록으로</a>
+  </div>
+</header>
+
+<article class="article">
+  <span class="kicker">✍ 생각 나누기</span>
+  <h1>내 생각 남기기</h1>
+  <p class="lead">스포츠 도슨트의 자료를 읽고 어떤 생각이 들었나요? 인상 깊었던 점, 새롭게 알게 된 사실, 또는 '생각해보기' 질문에 대한 나의 답을 자유롭게 적어주세요.</p>
+
+  <div class="prose">
+    <div class="form-card">
+      <form id="opinionForm" novalidate>
+
+        <div class="row2">
+          <div class="field">
+            <label for="sid">학번<span class="req">*</span></label>
+            <input type="text" id="sid" name="sid" placeholder="예: 10203" autocomplete="off" required>
+            <p class="hint-sm">학년·반·번호 (예: 1학년 2반 3번 → 10203)</p>
+          </div>
+          <div class="field">
+            <label for="name">이름<span class="req">*</span></label>
+            <input type="text" id="name" name="name" placeholder="예: 홍길동" autocomplete="off" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="topic">어떤 주제에 대한 생각인가요?<span class="req">*</span></label>
+          <select id="topic" name="topic" required>
+            <option value="">— 주제를 선택하세요 —</option>
+            <option>01 감독들은 왜 다른 옷을 입을까?</option>
+            <option>02 기후변화와 스포츠의 위기</option>
+            <option>03 오사카의 상징과 마라토너</option>
+            <option>04 장비가 기록을 바꾼다 (기술도핑)</option>
+            <option>05 축구와 인종차별</option>
+            <option>06 운동과 음악의 과학</option>
+            <option>07 프로야구 이전의 야구</option>
+            <option>08 스포츠 음료의 시작 (게토레이)</option>
+            <option>09 스포츠 기술의 혁신 (포스베리 플롭)</option>
+            <option>10 e스포츠와 페이커 이상혁</option>
+            <option>11 줄어드는 남녀 기록 격차</option>
+            <option>12 체육 선생님이 되는 길</option>
+            <option>13 스포츠에 깃든 전통의 혼 (하카)</option>
+            <option>14 일본의 학교 스포츠클럽 (부카츠)</option>
+            <option>15 유니폼, 하나되고 싶은 마음</option>
+            <option>16 야구의 징크스 — 파울라인</option>
+            <option>17 룰루레몬 창업자의 비하인드</option>
+            <option>18 메이저리그 맞춤형 배트 제작</option>
+            <option>19 스타디움과 파크의 차이</option>
+            <option>20 팬심을 가장한 폭력</option>
+            <option>21 도핑을 허용하는 대회 (인핸스드 게임)</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="opinion">나의 생각<span class="req">*</span></label>
+          <textarea id="opinion" name="opinion" placeholder="자료를 읽고 든 생각을 자유롭게 적어주세요." required></textarea>
+          <p class="hint-sm">제출한 내용은 선생님만 확인할 수 있습니다.</p>
+        </div>
+
+        <button type="submit" class="btn-submit" id="submitBtn">의견 제출하기</button>
+        <div class="status" id="status" role="status" aria-live="polite"></div>
+
+      </form>
+    </div>
+  </div>
+</article>
+
+<footer class="site-footer">스포츠 도슨트 아카이브 · <a href="../index.html">전체 목록 보기</a></footer>
+
+<script>
+(function () {
+  /* ====================================================================
+     ▼▼▼ 선생님 설정 ▼▼▼
+     구글 Apps Script 웹앱을 배포한 뒤, 발급받은 URL을 아래 따옴표 안에 붙여넣으세요.
+     (배포 방법은 저장소의 의견나누기/README-설정방법.md 참고)
+     예: "https://script.google.com/macros/s/AKfycb..../exec"
+  ==================================================================== */
+  var SHEET_ENDPOINT = "";
+  /* ==================================================================== */
+
+  var form = document.getElementById('opinionForm');
+  var btn = document.getElementById('submitBtn');
+  var statusEl = document.getElementById('status');
+
+  function show(type, msg) {
+    statusEl.className = 'status ' + type;
+    statusEl.textContent = msg;
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    var payload = {
+      학번: document.getElementById('sid').value.trim(),
+      이름: document.getElementById('name').value.trim(),
+      주제: document.getElementById('topic').value,
+      의견: document.getElementById('opinion').value.trim()
+    };
+
+    if (!payload.학번 || !payload.이름 || !payload.주제 || !payload.의견) {
+      show('err', '모든 항목을 빠짐없이 입력해 주세요.');
+      return;
+    }
+
+    if (!SHEET_ENDPOINT) {
+      show('info', '아직 구글 시트가 연결되지 않았습니다. 선생님께 문의해 주세요.');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = '제출 중…';
+    show('info', '제출하고 있습니다…');
+
+    fetch(SHEET_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    })
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        if (data && data.result === 'success') {
+          show('ok', '제출되었습니다. 소중한 의견 고마워요! 🎉');
+          form.reset();
+        } else {
+          throw new Error((data && data.message) || '저장에 실패했습니다.');
+        }
+      })
+      .catch(function (err) {
+        show('err', '제출에 실패했습니다. 잠시 후 다시 시도해 주세요. (' + err.message + ')');
+      })
+      .finally(function () {
+        btn.disabled = false;
+        btn.textContent = '의견 제출하기';
+      });
+  });
+})();
+</script>
+
+</body>
+</html>
