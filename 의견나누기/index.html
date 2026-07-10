@@ -68,6 +68,11 @@
         <div class="field">
           <label for="opinion">나의 생각<span class="req">*</span></label>
           <textarea id="opinion" name="opinion" placeholder="자료를 읽고 든 생각을 자유롭게 적어주세요." required></textarea>
+        </div>
+
+        <div class="field">
+          <label for="reflection">2026학년도 체육수업 소감<span class="req">*</span></label>
+          <textarea id="reflection" name="reflection" placeholder="2026학년도 체육수업 중 본인이 배운 것들, 느낀 점들을 간단하게 적어주세요." required></textarea>
           <p class="hint-sm">제출한 내용은 선생님만 확인할 수 있습니다.</p>
         </div>
 
@@ -108,10 +113,11 @@
       학번: document.getElementById('sid').value.trim(),
       이름: document.getElementById('name').value.trim(),
       주제: document.getElementById('topic').value,
-      의견: document.getElementById('opinion').value.trim()
+      의견: document.getElementById('opinion').value.trim(),
+      수업소감: document.getElementById('reflection').value.trim()
     };
 
-    if (!payload.학번 || !payload.이름 || !payload.주제 || !payload.의견) {
+    if (!payload.학번 || !payload.이름 || !payload.주제 || !payload.의견 || !payload.수업소감) {
       show('err', '모든 항목을 빠짐없이 입력해 주세요.');
       return;
     }

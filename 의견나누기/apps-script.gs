@@ -6,7 +6,7 @@
  */
 
 var SHEET_NAME = '의견';
-var HEADERS = ['제출시각', '학번', '이름', '주제', '의견'];
+var HEADERS = ['제출시각', '학번', '이름', '주제', '의견', '수업소감'];
 
 function doPost(e) {
   try {
@@ -20,18 +20,19 @@ function doPost(e) {
     var 이름 = String(body['이름'] || '').trim();
     var 주제 = String(body['주제'] || '').trim();
     var 의견 = String(body['의견'] || '').trim();
+    var 수업소감 = String(body['수업소감'] || '').trim();
 
-    if (!학번 || !이름 || !주제 || !의견) {
+    if (!학번 || !이름 || !주제 || !의견 || !수업소감) {
       return jsonOut({ result: 'error', message: '필수 항목이 비어 있습니다.' });
     }
 
     // 지나치게 긴 입력 차단 (스팸 방지)
-    if (의견.length > 5000) {
-      return jsonOut({ result: 'error', message: '의견이 너무 깁니다.' });
+    if (의견.length > 5000 || 수업소감.length > 5000) {
+      return jsonOut({ result: 'error', message: '입력이 너무 깁니다.' });
     }
 
     var sheet = getSheet();
-    sheet.appendRow([new Date(), 학번, 이름, 주제, 의견]);
+    sheet.appendRow([new Date(), 학번, 이름, 주제, 의견, 수업소감]);
 
     return jsonOut({ result: 'success' });
   } catch (err) {
