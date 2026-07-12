@@ -119,6 +119,15 @@
   var list = document.getElementById('topicList');
   var tpl = document.getElementById('blockTpl');
   var statusEl = document.getElementById('status');
+  var pendingSubmissionId = null;
+
+  function createSubmissionId() {
+    var bytes = new Uint8Array(16);
+    window.crypto.getRandomValues(bytes);
+    return Array.prototype.map.call(bytes, function (value) {
+      return ('0' + value.toString(16)).slice(-2);
+    }).join('');
+  }
 
   function show(type, msg) {
     statusEl.className = 'status ' + type;
@@ -162,6 +171,10 @@
   // 최초 1개 블록
   addBlock();
 
+  form.addEventListener('input', function () {
+    if (!btn.disabled) pendingSubmissionId = null;
+  });
+
   form.addEventListener('submit', function (e) {
     e.preventDefault();
 
@@ -197,6 +210,8 @@
       return;
     }
 
+    if (!pendingSubmissionId) pendingSubmissionId = createSubmissionId();
+
     btn.disabled = true;
     btn.textContent = '제출 중…';
     show('info', '제출하고 있습니다…');
@@ -204,7 +219,13 @@
     fetch(SHEET_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ 학번: 학번, 이름: 이름, 수업소감: 수업소감, 항목: 항목 })
+      body: JSON.stringify({
+        학번: 학번,
+        이름: 이름,
+        수업소감: 수업소감,
+        항목: 항목,
+        요청ID: pendingSubmissionId
+      })
     })
       .then(function (res) { return res.json(); })
       .then(function (data) {
@@ -213,6 +234,7 @@
           form.reset();
           list.innerHTML = '';
           addBlock();
+          pendingSubmissionId = null;
         } else {
           throw new Error((data && data.message) || '저장에 실패했습니다.');
         }
