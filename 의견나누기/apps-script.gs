@@ -21,7 +21,7 @@ function doPost(e) {
     var 수업소감 = String(body['수업소감'] || '').trim();
     var 항목 = body['항목'];
 
-    if (!학번 || !이름 || !수업소감) {
+    if (!학번 || !이름) {
       return jsonOut({ result: 'error', message: '필수 항목이 비어 있습니다.' });
     }
     if (!Array.isArray(항목) || 항목.length === 0) {
